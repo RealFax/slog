@@ -2,7 +2,6 @@ package log
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"log/slog"
 	"sync"
@@ -27,22 +26,6 @@ func buildOutput(bs ...[]byte) []byte {
 	return b
 }
 
-//func suppressDefaults(
-//	next func([]string, slog.Attr) slog.Attr,
-//) func([]string, slog.Attr) slog.Attr {
-//	return func(groups []string, a slog.Attr) slog.Attr {
-//		if a.Method == slog.TimeKey ||
-//			a.Method == slog.LevelKey ||
-//			a.Method == slog.MessageKey {
-//			return slog.Attr{}
-//		}
-//		if next == nil {
-//			return a
-//		}
-//		return next(groups, a)
-//	}
-//}
-
 func putAttr(attrs Attrs, attr slog.Attr) {
 	var v any
 	switch attr.Value.Kind() {
@@ -62,19 +45,19 @@ func putAttr(attrs Attrs, attr slog.Attr) {
 		v = attr.Value.Time()
 	case slog.KindAny:
 		switch x := attr.Value.Any().(type) {
-		case json.Marshaler:
-			b, _ := json.Marshal(x)
-			v = json.RawMessage(b)
+		case Marshaler:
+			b, _ := Marshal(x)
+			v = RawMessage(b)
 		case fmt.Stringer:
 			v = x.String()
 		case error:
 			v = x.Error()
 		default:
-			b, err := json.Marshal(x)
+			b, err := Marshal(x)
 			if err != nil {
 				panic(fmt.Sprintf("bad kind any: %s", attr.Value.Kind()))
 			}
-			v = json.RawMessage(b)
+			v = RawMessage(b)
 		}
 	default:
 		panic(fmt.Sprintf("bad kind: %s", attr.Value.Kind()))

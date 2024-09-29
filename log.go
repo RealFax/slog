@@ -16,7 +16,7 @@ var (
 )
 
 func init() {
-	ReleaseMode, _ = strconv.ParseBool(os.Getenv("LOG_RELEASE"))
+	ReleaseMode, _ = strconv.ParseBool(os.Getenv("LOG_PURE"))
 
 	opts := &slog.HandlerOptions{
 		Level: &logLoggerLevel,

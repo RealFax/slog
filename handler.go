@@ -2,7 +2,6 @@ package log
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"log/slog"
 	"runtime"
@@ -47,16 +46,16 @@ func (a Attrs) String() string {
 	}
 
 	if ReleaseMode {
-		b, _ := json.Marshal(a)
+		b, _ := Marshal(a)
 		return string(b)
 	}
-	b, _ := json.MarshalIndent(a, "", "  ")
+	b, _ := MarshalIndent(a, "", "  ")
 	return string(b)
 }
 
 func (r Record) Bytes() []byte {
 	if ReleaseMode {
-		b, _ := json.Marshal(r)
+		b, _ := Marshal(r)
 		return append(b, '\n')
 	}
 	bs := [][]byte{
