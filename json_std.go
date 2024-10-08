@@ -4,11 +4,6 @@ package log
 
 import "encoding/json"
 
-type (
-	Marshaler  = json.Marshaler
-	RawMessage = json.RawMessage
-)
-
 func Marshal(v any) ([]byte, error) {
 	return json.Marshal(v)
 }
